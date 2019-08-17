@@ -32,13 +32,18 @@ function createPokemon(name,type){
     return pokemon
 }
 
-function addType2(type2){
-    this.type2=type2
-}
-
 function isSufficientParameter(v){
     return v !== null || v !== '' || v !== undefined 
 }
+
+// function isPokemonExisted(id){
+//     return pokemons[id]
+//     let pokemon = pokemons[id]
+//     if(pokemon === undefined){
+//         res.status(400).send({error:'Cannot delete Pokemon: Pokemon is not found'}) //https status 4xx up such as 4xx client error 
+//         return
+//     }
+// }
 
 app.get("/pokemons", (req, res) => res.send(pokemons))
 
@@ -79,5 +84,20 @@ app.put('/pokemons/:id', (req, res) => {
     pokemons[id] = pokemon
     res.sendStatus(200) //update use 200 or **204 ในกรณีที่่ไม่มี respon body เท่านั้น
 })
+
+app.delete('/pokemons/:id', (req, res) => {
+    if(!isSufficientParameter(req.params.id)){
+        res.status(400).send({error:'Insufficient parameter: id are required parameter'}) //https status 4xx up such as 4xx client error 
+        return
+    }
+    let id = req.params.id-1
+    let pokemon = pokemons[id]
+    if(pokemon === undefined){
+        res.status(400).send({error:'Cannot delete Pokemon: Pokemon is not found'}) //https status 4xx up such as 4xx client error 
+        return
+    }
+    delete pokemons[id]
+    res.sendStatus(204)
+ })
 
 app.listen(port, () => console.log(`Pokemon!! API listening on port ${port}!`))
