@@ -34,8 +34,17 @@ app.get("/pokemons", (req, res) => res.send(pokemons))
 
 
 app.post("/pokemons", (req, res) => {
+
+    if(req.body.name === null 
+        || req.body.name === '' 
+        || req.body.name === undefined 
+        || req.body.type === null 
+        || req.body.type === '' 
+        || req.body.type === undefined ){
+        res.status(400).send({error:'Insufficient parameter:  name and type are required parameter'}) //https status 4xx up such as 4xx client error 
+        return 
+    }
     let pokemon = createPokemon(req.body.name,req.body.type)
-    console.log(pokemon)
     pokemons.push(pokemon)
     res.sendStatus(201)
 })
