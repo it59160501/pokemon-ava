@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-const port = 3000;
 
 app.use(express.json())
 // https://bit.ly/2KQb0gR
@@ -9,10 +8,10 @@ app.use(express.json())
 // {name:'Charizard',type:'Fire'}
 
 class Pokemon{
-    constructor(name,type1){
+    constructor(name,type){
         this.id=null
         this.name=name
-        this.type1=type1
+        this.type=type
         this.type2=null
     }
 
@@ -33,29 +32,31 @@ function createPokemon(name,type){
 }
 
 function isSufficientParameter(v){
-    return v !== null || v !== '' || v !== undefined 
+    return v !== null && v !== '' && v !== undefined 
 }
 
-// function isPokemonExisted(id){
-//     return pokemons[id]
-//     let pokemon = pokemons[id]
-//     if(pokemon === undefined){
-//         res.status(400).send({error:'Cannot delete Pokemon: Pokemon is not found'}) //https status 4xx up such as 4xx client error 
-//         return
-//     }
-// }
+app.get("/", (req, res) => res.send({message:'Hello World'}))
 
 app.get("/pokemons", (req, res) => res.send(pokemons))
 
 app.get('/pokemons/:id', (req, res) => {
+    if(!isSufficientParameter(req.params.id)){
+        res.status(400).send({error:'Insufficient parameter: pokemon are required parameter'}) //https status 4xx up such as 4xx client error 
+        return
+    }
+
     let id = req.params.id-1
-    res.send(pokemons[id])
+    let pokemon = pokemons[id]
+    if(pokemon === null || pokemon === undefined){
+        res.status(400).send({error:'The pokemon could not be found'}) //https status 4xx up such as 4xx client error 
+        return
+    }
+    res.send(pokemon)
 })
 
 app.post("/pokemons", (req, res) => {
 
-    if(isSufficientParameter(req.body.name)
-        || isSufficientParameter(req.body.type)){
+    if(!isSufficientParameter(req.body.name) || !isSufficientParameter(req.body.type)){
         res.status(400).send({error:'Insufficient parameter: name and type are required parameter'}) //https status 4xx up such as 4xx client error 
         return 
     }
@@ -100,4 +101,4 @@ app.delete('/pokemons/:id', (req, res) => {
     res.sendStatus(204)
  })
 
-app.listen(port, () => console.log(`Pokemon!! API listening on port ${port}!`))
+module.exports = app
