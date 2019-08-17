@@ -3,17 +3,19 @@ const app = express();
 const port = 3000;
 
 app.use(express.json())
-
+// https://bit.ly/2KQb0gR
 // {name:'Pikachu',type:'Electhic'},
 // {name:'Goduk',type:'Water'},
 // {name:'Charizard',type:'Fire'}
 
 class Pokemon{
-    constructor(name,type){
+    constructor(name,type1){
         this.id=null
         this.name=name
-        this.type=type
+        this.type1=type1
+        this.type2=null
     }
+
 }
 
 let pokemons = []
@@ -30,18 +32,26 @@ function createPokemon(name,type){
     return pokemon
 }
 
+function addType2(type2){
+    this.type2=type2
+}
+
+function isSufficientParameter(v){
+    return v !== null || v !== '' || v !== undefined 
+}
+
 app.get("/pokemons", (req, res) => res.send(pokemons))
 
+app.get('/pokemons/:id', (req, res) => {
+    let id = req.params.id-1
+    res.send(pokemons[id])
+})
 
 app.post("/pokemons", (req, res) => {
 
-    if(req.body.name === null 
-        || req.body.name === '' 
-        || req.body.name === undefined 
-        || req.body.type === null 
-        || req.body.type === '' 
-        || req.body.type === undefined ){
-        res.status(400).send({error:'Insufficient parameter:  name and type are required parameter'}) //https status 4xx up such as 4xx client error 
+    if(isSufficientParameter(req.body.name)
+        || isSufficientParameter(req.body.type)){
+        res.status(400).send({error:'Insufficient parameter: name and type are required parameter'}) //https status 4xx up such as 4xx client error 
         return 
     }
     let pokemon = createPokemon(req.body.name,req.body.type)
@@ -49,5 +59,25 @@ app.post("/pokemons", (req, res) => {
     res.sendStatus(201)
 })
 
+app.put('/pokemons/:id', (req, res) => {
+    if(!isSufficientParameter(req.body.type2)){
+        res.status(400).send({error:'Insufficient parameter: type2 are required parameter'}) //https status 4xx up such as 4xx client error 
+        return
+    }
+    
+    if(!isSufficientParameter(req.params.id)){
+        res.status(400).send({error:'Insufficient parameter: id are required parameter'}) //https status 4xx up such as 4xx client error 
+        return
+    }
+    let id = req.params.id-1
+    let pokemon = pokemons[id]
+    if(pokemon === undefined){
+        res.status(400).send({error:'Cannot update Pokemon: Pokemon is not found'}) //https status 4xx up such as 4xx client error 
+        return
+    }
+    pokemon.type2 = req.body.type2
+    pokemons[id] = pokemon
+    res.sendStatus(200) //update use 200 or **204 ในกรณีที่่ไม่มี respon body เท่านั้น
+})
 
 app.listen(port, () => console.log(`Pokemon!! API listening on port ${port}!`))
