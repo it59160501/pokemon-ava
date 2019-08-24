@@ -14,9 +14,9 @@ describe('Pokemon API',() => {
         })
     })
 
-    describe('GET /pokemons/:id', () => {
+    describe('GET /pokemon/:id', () => {
         it('should return 200 OK with Pokemon id"',(done) =>{
-            request(app).get('/pokemons/1').expect(200).end((err,res)=>{
+            request(app).get('/pokemon/1').expect(200).end((err,res)=>{
                 res.body.should.to.be.a('Object')
                 res.body.should.have.property('id')
                 res.body.should.have.property('name')
@@ -27,7 +27,7 @@ describe('Pokemon API',() => {
         })
 
         it('should return 400 Bad Request"',(done) =>{
-            request(app).get('/pokemons/99').expect(400).end((err,res)=>{
+            request(app).get('/pokemon/99').expect(400).end((err,res)=>{
                 res.body.should.deep.equal({error:'The pokemon could not be found'})
                 done()
             })
@@ -51,16 +51,16 @@ describe('Pokemon API',() => {
         })
     })
 
-    describe('PUT /pokemons/:id', () => {
+    describe('PUT /pokemon/:id', () => {
         it('should return 200 OK and the pokemon has type2',(done) =>{
-            request(app).put('/pokemons/1')
+            request(app).put('/pokemon/1')
             .send({type2:'test'})
             .set('Accept', 'application/json')
             .expect(200,done)
         })
 
         it('should return 400 Bad Request When try to update not existed pokemon',(done) =>{
-            request(app).put('/pokemons/1')
+            request(app).put('/pokemon/1')
             .expect(400).end((err,res)=>{
                 res.body.should.deep.equal({error:'Insufficient parameter: type2 are required parameter'})
                 done()
@@ -78,14 +78,14 @@ describe('Pokemon API',() => {
 //     })
 // }) test server
 
-describe('Pokemon API',() => {
-    it('GET /pokemons shold return list of pokemon',(done)=>{
-        nock('http://localhost:3000').get('/pokemons')
-        .reply(200,[
-            {name:'test',type:'test'}
-        ])
-    })
-})
+// describe('Pokemon API',() => {
+//     it('GET /pokemons shold return list of pokemon',(done)=>{
+//         nock('http://localhost:3000').get('/pokemons')
+//         .reply(200,[
+//             {name:'test',type:'test'}
+//         ])
+//     })
+// })
 
 
 // deep คือเครื่องหมาย ===

@@ -1,11 +1,10 @@
 {
   "name": "pokemons",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "start": "nodemon app.js"
+    "start": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -18,5 +17,14 @@
     "jest": "^24.9.0",
     "nodemon": "^1.19.1",
     "supertest": "^4.0.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/it59160501/pokemon-api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/it59160501/pokemon-api/issues"
+  },
+  "homepage": "https://github.com/it59160501/pokemon-api#readme",
+  "description": ""
 }
