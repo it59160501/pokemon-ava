@@ -8,7 +8,6 @@ function isSufficientParameter(v){
 
 router.get("/pokemons", (req, res) => {
 
-
     pokemon.getPokemon().then((result)=>{
         res.send(result)
     }).catch((err)=>{
@@ -62,18 +61,26 @@ router.put('/pokemon/:id', async (req, res) => {
     let id = req.params.id
     
     let p = await pokemon.getPokemonById(id)
+    p.type2 = req.body.type2
 
-    if(!p){
-        res.status(400).send({error:'Cannot update Pokemon: Pokemon is not found'}) //https status 4xx up such as 4xx client error 
-        return
+    try{
+        var result = await pokemon.updatePokemon(req.body.type2,p)
+        res.sendStatus(200)
+    }catch(err){
+        console.error(err)
     }
 
-    pokemon.updatePokemon(id,req.body.type2).then((result)=>{
-        res.sendStatus(200)
-    }).catch((err)=>{
-        console.error(err)
-        res.status(400).send({error:'Update pokemon is unsuccessfully'})
-    })
+    // if(!p){
+    //     res.status(400).send({error:'Cannot update Pokemon: Pokemon is not found'}) //https status 4xx up such as 4xx client error 
+    //     return
+    // }
+
+    // pokemon.updatePokemon(id,req.body.type2).then((result)=>{
+    //     res.sendStatus(200)
+    // }).catch((err)=>{
+    //     console.error(err)
+    //     res.status(400).send({error:'Update pokemon is unsuccessfully'})
+    // })
 })
 
 router.delete('/pokemon/:id', (req, res) => {

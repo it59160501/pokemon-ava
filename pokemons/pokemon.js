@@ -1,10 +1,11 @@
 const mongoClient = require('mongodb').MongoClient
 const objectID = require('mongodb').ObjectID
 
-const DB_URL = "mongodb+srv://it59160501:it59160501@pokemon-cluster-mi0oq.gcp.mongodb.net/admin?retryWrites=true&w=majority"
-const DB_NAME = 'example'
+let DB_URL = "mongodb+srv://it59160501:lidz123456@pokemon-cluster-wzc8t.gcp.mongodb.net/test?retryWrites=true&w=majority"
+const DB_NAME = 'pokemondb'
 const options = { useNewUrlParser : true, useUnifiedTopology : true}
 var client
+
 class Pokemon{
     constructor(name,type){
         this.id=null
@@ -116,14 +117,14 @@ async function getPokemonById(id){
     }
 }
 
-async function updatePokemon(id,newType){
+async function updatePokemon(id,p){
     var collection = await getColletion('pokemons')
     try{
         var result = await collection.updateOne(
            { "_id" : objectID(id)},
-           {$set: { "type2" : newType}} 
+           {$set: { "type2" : p.type2}} 
         )
-        return result
+        return true
     }
     catch(err){
         console.error(err)
@@ -135,6 +136,10 @@ async function updatePokemon(id,newType){
 
 function deletePokemon(id){
     delete pokemons[id]
+}
+
+function setDBUri(uri){
+    DB_URL = uri
 }
 
 module.exports.getPokemon = getPokemon
@@ -150,3 +155,5 @@ module.exports.getPokemonById = getPokemonById
 module.exports.updatePokemon = updatePokemon
 
 module.exports.deletePokemon = deletePokemon
+
+module.exports.dburi = setDBUri
